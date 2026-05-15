@@ -1,0 +1,25 @@
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+    "name": "admin",
+    "email": "admin@user.com",
+    "password": "admin",
+    "role": "ADMIN"
+}
+
+### 
+GET http://localhost:3000/users
+
+###
+GET http://localhost:3000/users/cmp69eq140000s8zb2ninfeoo
+
+# jwt.io
+###
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "admin@user.com",
+    "password": "admin"
+}
