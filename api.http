@@ -16,10 +16,25 @@ GET http://localhost:3000/users/cmp69eq140000s8zb2ninfeoo
 
 # jwt.io
 ###
+# @name adminLogin
 POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
     "email": "admin@user.com",
     "password": "admin"
+}
+
+###
+@tokenAdmin = {{ adminLogin.response.body.access_token }}
+
+###
+POST http://localhost:3000/posts
+Content-Type: application/json
+Authorization: Bearer {{ tokenAdmin }}
+
+{
+    "title": "First Post",
+    "content": "This is the content of the first post.",
+    "published": true
 }
