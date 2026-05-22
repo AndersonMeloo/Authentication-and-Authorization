@@ -7,6 +7,7 @@ nest g controller auth
 nest g service auth
 nest g guard auth
 nest g resource
+nest g guard auth/role
 
 Lib:
 Pool - npm install pg, npm install -D @types/pg
