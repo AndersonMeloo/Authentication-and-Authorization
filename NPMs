@@ -8,6 +8,8 @@ nest g service auth
 nest g guard auth
 nest g resource
 nest g guard auth/role
+nest g module cals
+nest g service cals/cals-ability
 
 Lib:
 Pool - npm install pg, npm install -D @types/pg
@@ -15,11 +17,13 @@ npx prisma migrate dev
 npm i bcrypt --save
 npm i @types/bcrypt --save-de
 npm i @nestjs/jwt
+npm i @casl/ability
 
 Prisma:
 npx prisma init
 npm install prisma @types/pg --save-dev
 npm install @prisma/client @prisma/adapter-pg pg dotenv
+npm install @casl/prisma
 
 
 
