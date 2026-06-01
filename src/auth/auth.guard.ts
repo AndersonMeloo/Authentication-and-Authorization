@@ -8,12 +8,14 @@ import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { Roles } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CalsAbilityService } from 'src/cals/cals-ability/cals-ability.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private prismaService: PrismaService,
+    private abilityService: CalsAbilityService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -44,6 +46,7 @@ export class AuthGuard implements CanActivate {
       }
 
       request.user = user;
+      this.abilityService.createForUser(user);
       return true;
     } catch (e) {
       console.error(e);
