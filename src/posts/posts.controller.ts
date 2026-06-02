@@ -17,13 +17,15 @@ import type { Request } from 'express';
 import { RequiredRoles } from 'src/auth/required-roles.decorator';
 import { Roles } from '@prisma/client';
 import { RoleGuard } from 'src/auth/role/role.guard';
+import { RequiredPermissions } from 'src/cals/required-permissions.decorator';
 
 @UseGuards(AuthGuard, RoleGuard)
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @RequiredRoles(Roles.WRITER, Roles.EDITOR)
+  // @RequiredRoles(Roles.WRITER, Roles.EDITOR)
+  @RequiredPermissions('create', 'Post')
   @Post()
   create(@Body() createPostDto: CreatePostDto, @Req() req: Request) {
     return this.postsService.create({
