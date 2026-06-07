@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 import bcrypt from 'bcrypt';
 import { CalsAbilityService } from 'src/cals/cals-ability/cals-ability.service';
+import { accessibleBy } from '@casl/prisma';
 
 @Injectable()
 export class UsersService {
@@ -19,16 +21,27 @@ export class UsersService {
       throw new Error('Unauthorized');
     }
 
+    const { permissions, ...createData } = createUserDto;
+
     return this.prismaService.user.create({
       data: {
-        ...createUserDto,
+        ...createData,
+        ...(permissions !== undefined
+          ? { permissions: permissions as Prisma.InputJsonValue }
+          : {}),
         password: bcrypt.hashSync(createUserDto.password, 10),
       },
     });
   }
 
   findAll() {
-    return this.prismaService.user.findMany();
+    const ability = this.abilityService.ability;
+
+    return this.prismaService.user.findMany({
+      where: {
+        AND: [accessibleBy(ability, 'read').ofType('User')],
+      },
+    });
   }
 
   findOne(id: string) {
@@ -38,9 +51,16 @@ export class UsersService {
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {
+    const { permissions, ...updateData } = updateUserDto;
+
     return this.prismaService.user.update({
       where: { id },
-      data: updateUserDto,
+      data: {
+        ...updateData,
+        ...(permissions !== undefined
+          ? { permissions: permissions as Prisma.InputJsonValue }
+          : {}),
+      },
     });
   }
 

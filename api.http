@@ -21,6 +21,24 @@ Authorization: Bearer {{ tokenAdmin }}
     "role": "READER"
 }
 
+### Create Writer
+POST http://localhost:3000/users
+Content-Type: application/json
+Authorization: Bearer {{ tokenAdmin }}
+
+{
+    "name": "Writer",
+    "email": "writer@user.com",
+    "password": "writer",
+    "role": "WRITER",
+    "permissions": [
+        {
+            "action": "read",
+            "resource": "User"
+        }
+    ]
+}
+
 ### 
 GET http://localhost:3000/users
 Authorization: Bearer {{ tokenAdmin }}
@@ -54,13 +72,42 @@ Content-Type: application/json
 @tokenReader = {{ readerLogin.response.body.access_token }}
 
 ###
+# @name writerLogin
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "writer@user.com",
+    "password": "writer"
+}
+
+###
+@tokenWriter = {{ writerLogin.response.body.access_token }}
+
+###
 POST http://localhost:3000/posts
 Content-Type: application/json
-# Authorization: Bearer {{ tokenAdmin }}
-Authorization: Bearer {{ tokenReader }}
+Authorization: Bearer {{ tokenAdmin }}
+# Authorization: Bearer {{ tokenReader }}
 
+# "published": true
 {
     "title": "First Post",
     "content": "This is the content of the first post.",
-    "published": true
+    "published": false
 }
+
+###
+GET http://localhost:3000/posts
+Authorization: Bearer {{ tokenAdmin }}
+# Authorization: Bearer {{ tokenReader }}
+
+###
+GET http://localhost:3000/cmpvyivb7000084zbx13epyt1
+Authorization: Bearer {{ tokenReader }}
+
+###
+GET http://localhost:3000/users
+# Authorization: Bearer {{ tokenAdmin }}
+# Authorization: Bearer {{ tokenWriter }}
+Authorization: Bearer {{ tokenReader }}

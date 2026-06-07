@@ -33,6 +33,7 @@ export class AuthGuard implements CanActivate {
         email: string;
         role: Roles;
         sub: string;
+        permissions: string[];
       }>(token, {
         algorithms: ['HS256'],
       });
